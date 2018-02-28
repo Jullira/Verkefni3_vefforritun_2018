@@ -1,6 +1,7 @@
-/* todo sækja pakka sem vantar  */
+const express = require('express');
+const pg = require('pg');
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres:@localhost:5432/notes';
 
 /**
  * Create a note asynchronously.
@@ -13,7 +14,7 @@ const connectionString = process.env.DATABASE_URL;
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function create({ title, text, datetime } = {}) {
-  /* todo útfæra */
+  
 }
 
 /**
@@ -22,7 +23,21 @@ async function create({ title, text, datetime } = {}) {
  * @returns {Promise} Promise representing an array of all note objects
  */
 async function readAll() {
-  /* todo útfæra */
+  const client = new Client({ connectionString });
+  await client.connect();
+
+  try {
+    const result = await client.query('SELECT * FROM notes');
+
+    const { rows } = result;
+    return rows;
+  } catch (err) {
+    console.error('Error selecting form data');
+    throw err;
+  } finally {
+    await client.end();
+  }
+}
 }
 
 /**
